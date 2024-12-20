@@ -1,7 +1,7 @@
 'use server'
 
 import { client } from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server"
+import { currentUser } from "@clerk/nextjs/server";
 
 export const verifyAccessToWebspace = async (workspaceId:string) => {
     try {
@@ -32,7 +32,7 @@ export const verifyAccessToWebspace = async (workspaceId:string) => {
 
         return { 
             status: 200,
-            daata: {
+            data: {
                 workspace: isUserInWorkspace
             }
         }
@@ -155,5 +155,48 @@ export const getWorkSpaces = async () => {
     }
     } catch (error) {
     return { status: 400 }
+    }
+}
+
+export const createWorkspace = async (name: string) => {
+    try {
+        const user = await currentUser();
+        if(!user) return { status: 404 }
+        const authorized = await client.user.findUnique({
+            where: {
+                clerkid: user.id,
+            },
+            select: {
+                subscription: {
+                    select: {
+                        plan: true,
+                    },
+                },
+            },
+        })
+
+        if(authorized?.subscription?.plan === "PRO"){
+            const workspace = await client.user.update({
+                where: {
+                    clerkid: user.id,
+                },
+                data: {
+                    workspace: {
+                        create: {
+                            name,
+                            type: "PUBLIC",
+                        },
+                    },
+                },
+            })
+            if(workspace){
+                return { status: 200, data: 'Workspace Created' }
+            }
+        }
+
+        return { status: 401, data: "you are not authorized to create a workspace"}
+
+    } catch (error) {
+        return { status: 400 }
     }
 }
