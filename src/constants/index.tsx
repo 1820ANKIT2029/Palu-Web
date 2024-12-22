@@ -5,7 +5,7 @@ export const MENU_ITEMS = (workspaceId: string): { title: string; href: string; 
     { title: 'My Library', href: `/dashboard/${workspaceId}`, icon: <FileDuoToneBlack />},
     { title: 'Notifications', href: `/dashboard/${workspaceId}/notifications`, icon: <Bell />},
     { title: 'Billing', href: `/dashboard/${workspaceId}/billing`, icon: <CreditCard />},
-    { title: 'Setting', href: `/dashboard/${workspaceId}/setting`, icon: <Settings />},
+    { title: 'Settings', href: `/dashboard/${workspaceId}/settings`, icon: <Settings />},
 
 
 ]

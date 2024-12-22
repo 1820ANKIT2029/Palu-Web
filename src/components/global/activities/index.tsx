@@ -1,11 +1,12 @@
 'use client'
-import CommentForm from '@/components/forms/comment-form'
-import { TabsContent } from '@/components/ui/tabs'
-import React from 'react'
-import CommentCard from '../comment-card'
-import { useQueryData } from '@/hooks/useQueryData'
-import { getVideoComments } from '@/actions/user'
-import { VideoCommentProps } from '@/types/index.type'
+
+import CommentForm from '@/components/forms/comment-form';
+import { TabsContent } from '@/components/ui/tabs';
+import React from 'react';
+import { useQueryData } from '@/hooks/useQueryData';
+import { getVideoComments } from '@/actions/user';
+import { VideoCommentProps } from '@/types/index.type';
+import CommentCard from '../comment-card';
 
 type Props = {
     author: string
@@ -17,8 +18,7 @@ const Activities = ({ author, videoId }: Props) => {
         getVideoComments(videoId)
     )
 
-    const { data: comments } = data as VideoCommentProps
-
+    const { data: comments } = data as VideoCommentProps || []
 
     return (
         <TabsContent

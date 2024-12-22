@@ -103,23 +103,23 @@ export type CommentRepliesProps = {
 
 export type VideoCommentProps = {
     data: {
-    User: {
+        User: {
+            id: string
+            email: string
+            firstname: string | null
+            lastname: string | null
+            createdAt: Date
+            clerkid: string
+            image: string | null
+            trial: boolean
+            firstView: boolean
+        } | null
+        reply: CommentRepliesProps[]
         id: string
-        email: string
-        firstname: string | null
-        lastname: string | null
+        comment: string
         createdAt: Date
-        clerkid: string
-        image: string | null
-        trial: boolean
-        firstView: boolean
-    } | null
-    reply: CommentRepliesProps[]
-    id: string
-    comment: string
-    createdAt: Date
-    commentId: string | null
-    userId: string | null
-    videoId: string | null
+        commentId: string | null
+        userId: string | null
+        videoId: string | null
     }[]
 }

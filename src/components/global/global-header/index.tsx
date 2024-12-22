@@ -18,7 +18,7 @@ const GlobalHeader = ({workspace}: Props) => {
             </span>
             <h1 className='text-4xl font-bold'>
                 { pathName && 
-                    !pathName.includes('folder') ? pathName.charAt(0).toUpperCase() + pathName.slice(1).toLowerCase()
+                    !pathName.includes('folder') ? pathName.charAt(1).toUpperCase() + pathName.slice(2).toLowerCase()
                     : 
                     'My Library'
                 }

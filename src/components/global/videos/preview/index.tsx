@@ -4,7 +4,7 @@ import { getPreviewVideo } from '@/actions/workspace'
 import { useQueryData } from '@/hooks/useQueryData'
 import { VideoProps } from '@/types/index.type'
 import { useRouter } from 'next/navigation'
-import React, { use } from 'react'
+import React, { useEffect } from 'react'
 import CopyLink from '../copy-link'
 import RichLink from '../rich-link'
 import { truncateString } from '@/lib/utils'
@@ -20,15 +20,22 @@ type Props = {
 
 const VideoPreview = ({videoId}: Props) => {
     const router = useRouter();
-    const { data } = useQueryData(['preview-video'], ()=> getPreviewVideo(videoId));
+    const { data, isFetched } = useQueryData(['preview-video'], ()=> getPreviewVideo(videoId));
     const { data: video, status, author } = data as VideoProps;
-    
-    if(status !== 200) router.push('/');
 
-    const daysAgo = Math.floor(
-        (new Date().getTime() - video.createdAt.getTime()) / (24 * 60 * 60 * 1000)
-    )
+    let daysAgo;
 
+    useEffect(()=>{
+        if(status !== 200) router.push('/');
+    }, [status])
+
+    if(video){
+        daysAgo = Math.floor(
+            (new Date().getTime() - video.createdAt.getTime()) / (24 * 60 * 60 * 1000)
+        )
+    }
+
+    if(isFetched && status === 200){
     return (
         <div className='grid grid-cols-1 xl:grid-cols-3 p-10 lg:py-10 overflow-y-auto gap-5'>
             <div className='flex flex-col lg:col-span-2 gap-y-10'>
@@ -101,7 +108,6 @@ const VideoPreview = ({videoId}: Props) => {
                         defaultValue="Ai tools"
                         triggers={['Ai tools', 'Transcript', 'Activity']}
                     >
-                        a
                         <AiTools
                             videoId={videoId}
                             trial={video.User?.trial!}
@@ -118,6 +124,10 @@ const VideoPreview = ({videoId}: Props) => {
 
         </div>
     )
+    }
+    else{
+        return <div>loading...</div>
+    }
 }
 
 export default VideoPreview
