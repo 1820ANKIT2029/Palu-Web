@@ -20,6 +20,8 @@ import { Button } from '@/components/ui/button'
 import Loader from '../loader'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import InfoBar from '../info-bar'
+import { useDispatch } from 'react-redux'
+import { WORKSPACES } from '@/redux/slices/workspaces'
 
 type Props = {
     activeWorkspaceId: string
@@ -28,6 +30,7 @@ type Props = {
 const Sidebar = ({activeWorkspaceId}: Props) => {
     const router = useRouter();
     const pathname = usePathname();
+    const dispatch = useDispatch();
 
     const { data, isFetched } = useQueryData(["user-workspaces"], getWorkSpaces);
     const menuItems = MENU_ITEMS(activeWorkspaceId);
@@ -40,15 +43,19 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
     const onChangeActiveWorkspace = (value: string) => {
         router.push(`/dashboard/${value}`)
     };
+    const currentWorkspace = workspace.workspace.find((s)=> s.id === activeWorkspaceId);
 
-    const currentWorkspace = workspace.workspace.find((s)=> s.id === activeWorkspaceId )
+    if(isFetched && workspace){
+        dispatch(WORKSPACES({workspaces: workspace.workspace}));
+    }
+
 
     const SidebarSection = (
         <div className='bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col gap-4 items-center overflow-hidden'>
 
             <div className='bg-[#111111] p-4 flex gap-2 justify-center items-center mb-4 absolute top-0 left-0 right-0'>
                 <Image src="/palu-logo.svg" height={40} width={40} alt='logo' />
-                <p className='text-2xl'>Opal</p>
+                <p className='text-2xl'>Palu</p>
             </div>
             <Select 
                 defaultValue={activeWorkspaceId}
@@ -186,8 +193,7 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
                 >
                 </GlobalCard>
             }
-            
-        </div>
+            </div>
     );
 
 

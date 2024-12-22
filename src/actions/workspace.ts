@@ -1,7 +1,7 @@
 'use server'
 
 import { client } from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export const verifyAccessToWebspace = async (workspaceId:string) => {
     try {
@@ -65,7 +65,7 @@ export const getWorkspaceFolders = async (workSpaceId: string) => {
         }
         return { status: 404, data: []}
     } catch (error) {
-        return { status: 403, data: []}
+        return { status: 500, data: []}
     }
 };
 
@@ -198,5 +198,142 @@ export const createWorkspace = async (name: string) => {
 
     } catch (error) {
         return { status: 400 }
+    }
+}
+
+export const renameFolders = async (folderId: string, name: string) => {
+    try {
+        const folder = await client.folder.update({
+            where: {
+                id: folderId,
+            },
+            data: {
+                name,
+            },
+        })
+
+        if(folder) return { status: 200 , data: "Folder Renamed"}
+        return { status: 400 , data: "Folder does not exist"}
+    } catch (error) {
+        return { status: 500 , data: "Internal server error"}
+    }
+}
+
+export const createFolder = async (workspaceId:string) => {
+    try {
+        const isNewFolders = await client.workSpace.update({
+            where: {
+                id: workspaceId
+            },
+            data: {
+                folders: {
+                    create: { name: 'Untitled'}
+                },
+            },
+        })
+
+        if(isNewFolders){
+            return { status: 200, message: "New Folder Created" }
+        }
+
+    } catch (error) {
+        return { status: 500, message: "Internal Server error" }
+    }
+}
+
+export const getFolderInfo = async (folderId: string) => {
+    try {
+        const folder = await client.folder.findUnique({
+            where: {
+                id: folderId,
+            },
+            select: {
+                name: true,
+                _count: {
+                    select: {
+                        videos: true,
+                    },
+                },
+            },
+        })
+
+        if(folder){
+            return { status: 200, data: folder }
+        }
+
+        return { status: 400, data: null }
+    } catch (error) {
+        return { status: 500, data: null }
+    }
+}
+
+export const moveVideoLocation = async (
+    videoId: string,
+    workspaceId: string,
+    folderId: string
+) => {
+    try {
+        const location = await client.video.update({
+            where: {
+                id: videoId,
+            },
+            data: {
+                folderId: folderId || null,
+                workSpaceId: workspaceId,
+            }
+        })
+
+        if(location) return { status: 200, data: "folder changed Successfully"}
+
+        return { status: 404, data: "workspace/folder not found"}
+    } catch (error) {
+        return { status: 500, data: "Internal server error"}
+    }
+}
+
+export const getPreviewVideo = async (videoId: string) => {
+    try {
+        const user = await currentUser();
+        if(!user) return { status: 404 }
+        const video = await client.video.findUnique({
+            where: {
+                id: videoId,
+            },
+            select: {
+                title: true,
+                createdAt: true,
+                source: true,
+                description: true,
+                processing: true,
+                views: true,
+                summery: true,
+                User: {
+                    select: {
+                        firstname: true,
+                        lastname: true,
+                        image: true,
+                        clerkid: true,
+                        trial: true,
+                        subscription: {
+                            select: {
+                                plan: true,
+                            },
+                        },
+                    },
+                },
+            },
+        })
+
+        if(video){
+            return {
+                status: 200,
+                data: video,
+                author: user.id === video.User?.clerkid ? true: false,
+            }
+        }
+
+        return { status: 404 }
+    } catch (error) {
+        return { status: 500, data: "Internal server error at getPreviewVideo" }
     }
 }

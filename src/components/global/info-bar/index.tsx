@@ -22,11 +22,11 @@ const InfoBar = (props: Props) => {
         <div className='flex items-center gap-4'>
           <Button className='bg-[#9D9D9D] flex items-center gap-2'>
             <UploadIcon size={20} />{" "}
-            <span className='flex items-center gap-2'>Upload</span>
+            <span className='flex items-center gap-2 max-sm:hidden'>Upload</span>
           </Button>
           <Button className='bg-[#9D9D9D] flex items-center gap-2'>
             <VideoRecorderIcon />{" "}
-            <span className='flex items-center gap-2'>Record</span>
+            <span className='flex items-center gap-2 max-sm:hidden'>Record</span>
           </Button>
           <UserButton />
         </div>
