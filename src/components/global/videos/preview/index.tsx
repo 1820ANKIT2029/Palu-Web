@@ -1,6 +1,6 @@
 'use client'
 
-import { getPreviewVideo } from '@/actions/workspace'
+import { getPreviewVideo, sendEmailForFirstView } from '@/actions/workspace'
 import { useQueryData } from '@/hooks/useQueryData'
 import { VideoProps } from '@/types/index.type'
 import { useRouter } from 'next/navigation'
@@ -21,6 +21,7 @@ type Props = {
 const VideoPreview = ({videoId}: Props) => {
     const router = useRouter();
     const { data, isFetched } = useQueryData(['preview-video'], ()=> getPreviewVideo(videoId));
+    const notifyFirstView = async () => sendEmailForFirstView(videoId)
     const { data: video, status, author } = data as VideoProps;
 
     let daysAgo;
@@ -34,6 +35,15 @@ const VideoPreview = ({videoId}: Props) => {
             (new Date().getTime() - video.createdAt.getTime()) / (24 * 60 * 60 * 1000)
         )
     }
+
+    useEffect(()=>{
+        if(video){
+            if(video.views === 0){
+                notifyFirstView()
+            }
+            return () => { notifyFirstView() }
+        } 
+    }, [])
 
     if(isFetched && status === 200){
     return (

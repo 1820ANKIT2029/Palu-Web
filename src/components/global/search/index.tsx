@@ -7,21 +7,20 @@ import { useSearch } from '@/hooks/useSearch'
 import { User } from 'lucide-react'
 import React from 'react'
 import Loader from '../loader'
+import { inviteMembers } from '@/actions/user'
 
 type Props = {
     workspaceId: string
 }
 
 const Search = ({workspaceId}: Props) => {
-    const {query, onSearchQuery, isFetching, onUsers } = useSearch('get-workspace', 'USERS')
+    const {query, onSearchQuery, isFetching, onUsers } = useSearch('get-workspace', 'USERS');
 
-    // WIP
-    // const {} = useMutationData(
-    //   ['invite-member'],
-    //   (data: {recieverId: string; email: string})=>{
-        
-    //   }
-    // )
+    const {mutate, isPending} = useMutationData(
+      ['invite-member'],
+      (data: {recieverId: string; email: string})=> inviteMembers(workspaceId, data.recieverId, data.email)
+    );
+
   return (
     <div className='flex flex-col gap-y-5'>
       <Input 
@@ -58,8 +57,8 @@ const Search = ({workspaceId}: Props) => {
                 </p>
               </div>
               <div className='flex-1 flex justify-end items-center'>
-                <Button onClick={()=>{}} variant='default' className='w-5/12 font-bold'>
-                  <Loader state={false} color='#000'>
+                <Button onClick={()=> mutate({recieverId: user.id, email: user.email})} variant='default' className='w-5/12 font-bold'>
+                  <Loader state={isPending} color='#000'>
                     Invite
                   </Loader>
                 </Button>
