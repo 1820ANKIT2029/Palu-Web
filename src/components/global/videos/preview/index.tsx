@@ -13,6 +13,7 @@ import TabMenu from '../../tabs'
 import AiTools from '../../ai-tools'
 import VideoTranscript from '../../video-transcript'
 import Activities from '../../activities'
+import EditVideo from '../edit'
 
 type Props = {
     videoId: string
@@ -52,7 +53,7 @@ const VideoPreview = ({videoId}: Props) => {
                 <div>
                     <div className='flex gap-x-5 items-start justify-between'>
                         <h2 className='text-white text-4xl font-bold'>{video.title}</h2>
-                        {/* { author ? (
+                        { author ? (
                             <EditVideo
                                 videoId={videoId}
                                 title={video.title as string}
@@ -60,7 +61,7 @@ const VideoPreview = ({videoId}: Props) => {
                             />
                         ) : (
                             <></>
-                        )} */}
+                        )}
                     </div>
                     <span className='flex gap-x-3 mt-2'>
                         <p className='text-[#9D9D9D] capitalize'>

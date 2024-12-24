@@ -3,11 +3,14 @@
 import { client } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { sendEmail } from "./user";
+import { createClient, OAuthStrategy } from '@wix/sdk';
+import { items } from '@wix/data';
+import axios from "axios";
 
-export const verifyAccessToWebspace = async (workspaceId:string) => {
+export const verifyAccessToWebspace = async (workspaceId: string) => {
     try {
         const user = await currentUser();
-        if(!user) return { status: 403 };
+        if (!user) return { status: 403 };
 
         const isUserInWorkspace = await client.workSpace.findUnique({
             where: {
@@ -31,7 +34,7 @@ export const verifyAccessToWebspace = async (workspaceId:string) => {
             },
         })
 
-        return { 
+        return {
             status: 200,
             data: {
                 workspace: isUserInWorkspace
@@ -41,7 +44,7 @@ export const verifyAccessToWebspace = async (workspaceId:string) => {
     } catch (error) {
         return {
             status: 403,
-            data: { workspace: null}
+            data: { workspace: null }
         }
     }
 };
@@ -61,19 +64,19 @@ export const getWorkspaceFolders = async (workSpaceId: string) => {
             },
         })
 
-        if(isFolders && isFolders.length > 0){
+        if (isFolders && isFolders.length > 0) {
             return { status: 200, data: isFolders }
         }
-        return { status: 404, data: []}
+        return { status: 404, data: [] }
     } catch (error) {
-        return { status: 500, data: []}
+        return { status: 500, data: [] }
     }
 };
 
-export const getAllUserVideos = async (workSpaceId:string) => {
+export const getAllUserVideos = async (workSpaceId: string) => {
     try {
         const user = await currentUser()
-        if(!user) return { status : 404}
+        if (!user) return { status: 404 }
 
         const videos = await client.video.findMany({
             where: {
@@ -104,7 +107,7 @@ export const getAllUserVideos = async (workSpaceId:string) => {
             },
         })
 
-        if(videos && videos.length > 0){
+        if (videos && videos.length > 0) {
             return { status: 200, data: videos }
         }
 
@@ -116,53 +119,53 @@ export const getAllUserVideos = async (workSpaceId:string) => {
 
 export const getWorkSpaces = async () => {
     try {
-    const user = await currentUser()
+        const user = await currentUser()
 
-    if (!user) return { status: 404 }
+        if (!user) return { status: 404 }
 
-    const workspaces = await client.user.findUnique({
-        where: {
-            clerkid: user.id,
-        },
-        select: {
-            subscription: {
-                select: {
-                    plan: true,
-                },
+        const workspaces = await client.user.findUnique({
+            where: {
+                clerkid: user.id,
             },
-            workspace: {
+            select: {
+                subscription: {
                     select: {
-                    id: true,
-                    name: true,
-                    type: true,
+                        plan: true,
+                    },
                 },
-            },
-            members: {
-                select: {
-                    WorkSpace: {
+                workspace: {
+                    select: {
+                        id: true,
+                        name: true,
+                        type: true,
+                    },
+                },
+                members: {
+                    select: {
+                        WorkSpace: {
                             select: {
-                            id: true,
-                            name: true,
-                            type: true,
+                                id: true,
+                                name: true,
+                                type: true,
+                            },
                         },
                     },
                 },
             },
-        },
-    })
+        })
 
-    if (workspaces) {
-        return { status: 200, data: workspaces }
-    }
+        if (workspaces) {
+            return { status: 200, data: workspaces }
+        }
     } catch (error) {
-    return { status: 400 }
+        return { status: 400 }
     }
 }
 
 export const createWorkspace = async (name: string) => {
     try {
         const user = await currentUser();
-        if(!user) return { status: 404 }
+        if (!user) return { status: 404 }
         const authorized = await client.user.findUnique({
             where: {
                 clerkid: user.id,
@@ -176,7 +179,7 @@ export const createWorkspace = async (name: string) => {
             },
         })
 
-        if(authorized?.subscription?.plan === "PRO"){
+        if (authorized?.subscription?.plan === "PRO") {
             const workspace = await client.user.update({
                 where: {
                     clerkid: user.id,
@@ -190,12 +193,12 @@ export const createWorkspace = async (name: string) => {
                     },
                 },
             })
-            if(workspace){
+            if (workspace) {
                 return { status: 200, data: 'Workspace Created' }
             }
         }
 
-        return { status: 401, data: "you are not authorized to create a workspace"}
+        return { status: 401, data: "you are not authorized to create a workspace" }
 
     } catch (error) {
         return { status: 400 }
@@ -213,14 +216,14 @@ export const renameFolders = async (folderId: string, name: string) => {
             },
         })
 
-        if(folder) return { status: 200 , data: "Folder Renamed"}
-        return { status: 400 , data: "Folder does not exist"}
+        if (folder) return { status: 200, data: "Folder Renamed" }
+        return { status: 400, data: "Folder does not exist" }
     } catch (error) {
-        return { status: 500 , data: "Internal server error"}
+        return { status: 500, data: "Internal server error" }
     }
 }
 
-export const createFolder = async (workspaceId:string) => {
+export const createFolder = async (workspaceId: string) => {
     try {
         const isNewFolders = await client.workSpace.update({
             where: {
@@ -228,12 +231,12 @@ export const createFolder = async (workspaceId:string) => {
             },
             data: {
                 folders: {
-                    create: { name: 'Untitled'}
+                    create: { name: 'Untitled' }
                 },
             },
         })
 
-        if(isNewFolders){
+        if (isNewFolders) {
             return { status: 200, message: "New Folder Created" }
         }
 
@@ -258,7 +261,7 @@ export const getFolderInfo = async (folderId: string) => {
             },
         })
 
-        if(folder){
+        if (folder) {
             return { status: 200, data: folder }
         }
 
@@ -284,18 +287,18 @@ export const moveVideoLocation = async (
             }
         })
 
-        if(location) return { status: 200, data: "folder changed Successfully"}
+        if (location) return { status: 200, data: "folder changed Successfully" }
 
-        return { status: 404, data: "workspace/folder not found"}
+        return { status: 404, data: "workspace/folder not found" }
     } catch (error) {
-        return { status: 500, data: "Internal server error"}
+        return { status: 500, data: "Internal server error" }
     }
 }
 
 export const getPreviewVideo = async (videoId: string) => {
     try {
         const user = await currentUser();
-        if(!user) return { status: 404 }
+        if (!user) return { status: 404 }
         const video = await client.video.findUnique({
             where: {
                 id: videoId,
@@ -325,11 +328,11 @@ export const getPreviewVideo = async (videoId: string) => {
             },
         })
 
-        if(video){
+        if (video) {
             return {
                 status: 200,
                 data: video,
-                author: user.id === video.User?.clerkid ? true: false,
+                author: user.id === video.User?.clerkid ? true : false,
             }
         }
 
@@ -350,17 +353,17 @@ export const sendEmailForFirstView = async (videoId: string) => {
             },
         })
         if (!firstViewSettings?.firstView) return
-  
+
         const video = await client.video.findUnique({
             where: {
                 id: videoId,
             },
             select: {
-            title: true,
-            views: true,
-            User: {
-                select: {
-                    email: true,
+                title: true,
+                views: true,
+                User: {
+                    select: {
+                        email: true,
                     },
                 },
             },
@@ -374,13 +377,13 @@ export const sendEmailForFirstView = async (videoId: string) => {
                     views: video.views + 1,
                 },
             })
-  
+
             const { transporter, mailOptions } = await sendEmail(
                 video.User?.email!,
                 'You got a viewer',
                 `Your video ${video.title} just got its first viewer`
             )
-    
+
             transporter.sendMail(mailOptions, async (error, info) => {
                 if (error) {
                     console.log(error.message)
@@ -405,3 +408,93 @@ export const sendEmailForFirstView = async (videoId: string) => {
         return { status: 500 }
     }
 }
+
+export const editVideoInfo = async (
+    videoId: string,
+    title: string,
+    description: string
+) => {
+    try {
+        const video = await client.video.update({
+            where: { id: videoId },
+            data: {
+                title,
+                description,
+            },
+        });
+        if (video) return { status: 200, data: "Video successfully updated" };
+        return { status: 404, data: "Video not found" };
+    } catch (error) {
+        return { status: 400 };
+    }
+};
+
+export const getWixContent = async () => {
+    try {
+        const myWixClient = createClient({
+            modules: { items },
+            auth: OAuthStrategy({
+                clientId: process.env.WIX_OAUTH_KEY as string,
+            }),
+        });
+
+        const videos = await myWixClient.items
+            .queryDataItems({
+                dataCollectionId: "palu-videos",
+            })
+            .find();
+
+        const videoIds = videos.items.map((v: any) => v.data?.title);
+
+        const video = await client.video.findMany({
+            where: {
+                id: {
+                    in: videoIds,
+                },
+            },
+            select: {
+                id: true,
+                createdAt: true,
+                title: true,
+                source: true,
+                processing: true,
+                workSpaceId: true,
+                User: {
+                    select: {
+                        firstname: true,
+                        lastname: true,
+                        image: true,
+                    },
+                },
+                Folder: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
+        });
+
+        if (video && video.length > 0) {
+            return { status: 200, data: video };
+        }
+        return { status: 404 };
+    } catch (error) {
+        console.log(error);
+        return { status: 400 };
+    }
+};
+
+export const howToPost = async () => {
+    try {
+        const response = await axios.get(process.env.CLOUD_WAYS_POST as string);
+        if (response.data) {
+            return {
+                title: response.data[0].title.rendered,
+                content: response.data[0].content.rendered,
+            };
+        }
+    } catch (error) {
+        return { status: 400 };
+    }
+};
