@@ -44,6 +44,8 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
     const onChangeActiveWorkspace = (value: string) => {
         router.push(`/dashboard/${value}`)
     };
+
+    console.log(workspace)
     const currentWorkspace = workspace.workspace.find((s)=> s.id === activeWorkspaceId);
 
     if(isFetched && workspace){
@@ -110,6 +112,10 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
                     <Search workspaceId={activeWorkspaceId} />
                 </Modal>
             }
+
+
+            <div className='overflow-auto'>
+
 
             <p className='w-full text-[#9D9D9D] font-bold mt-4'>Menu</p>
             <nav className='w-full'>
@@ -190,6 +196,8 @@ const Sidebar = ({activeWorkspaceId}: Props) => {
                 >
                 </GlobalCard>
             }
+            </div>
+
             </div>
     );
 

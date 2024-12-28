@@ -100,3 +100,25 @@
     rgba(23, 23, 23, 1)
   );
 }
+
+/* Style for Webkit browsers (Chrome, Safari, etc.) */
+::-webkit-scrollbar {
+  width: 8px; /* Horizontal scrollbar width */
+  height: 8px; /* Vertical scrollbar height */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1d1d1d; /* Thumb color */
+  border-radius: 10px;
+  border: 2px solid #1d1d1d; /* Border around the thumb */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #000000; /* Track color */
+  border-radius: 10px;
+}
+
+/* Optional: Add hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #1d1d1d;
+}

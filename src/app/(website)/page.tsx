@@ -1,7 +1,13 @@
-export default function Home() {
+import HeroSection from "@/app/(website)/_components/home/hero-section";
+import ShowcaseSection from "@/app/(website)/_components/home/showcase-section";
+
+const HomePage = () => {
   return (
-    <main>
-      <p>palu</p> 
-    </main>
+    <div>
+      <HeroSection />
+      <ShowcaseSection />
+    </div>
   );
-}
+};
+
+export default HomePage;

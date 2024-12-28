@@ -5,7 +5,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import nodemailer from 'nodemailer';
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_CLIENT_SECRET as string)
+// need to implement
+// const stripe = new Stripe(process.env.STRIPE_CLIENT_SECRET as string)
 
 export const sendEmail = async (
     to: string,
@@ -480,33 +481,35 @@ export const acceptInvite = async (inviteId: string) => {
 }
 
 export const completeSubscription = async (session_id: string) => {
-    try {
-        const user = await currentUser()
-        if (!user) return { status: 404 }
+
+    return { status: 500 , data: "out of service!!"}
+    // try {
+    //     const user = await currentUser()
+    //     if (!user) return { status: 404 }
   
-        const session = await stripe.checkout.sessions.retrieve(session_id)
-        if (session) {
-            const customer = await client.user.update({
-                where: {
-                    clerkid: user.id,
-                },
-                data: {
-                    subscription: {
-                        update: {
-                            data: {
-                                customerId: session.customer as string,
-                                plan: 'PRO',
-                            },
-                        },
-                    },
-                },
-            })
-            if (customer) {
-                return { status: 200 }
-            }
-        }
-        return { status: 404 }
-    } catch (error) {
-        return { status: 400 }
-    }
+    //     const session = await stripe.checkout.sessions.retrieve(session_id)
+    //     if (session) {
+    //         const customer = await client.user.update({
+    //             where: {
+    //                 clerkid: user.id,
+    //             },
+    //             data: {
+    //                 subscription: {
+    //                     update: {
+    //                         data: {
+    //                             customerId: session.customer as string,
+    //                             plan: 'PRO',
+    //                         },
+    //                     },
+    //                 },
+    //             },
+    //         })
+    //         if (customer) {
+    //             return { status: 200 }
+    //         }
+    //     }
+    //     return { status: 404 }
+    // } catch (error) {
+    //     return { status: 400 }
+    // }
 }

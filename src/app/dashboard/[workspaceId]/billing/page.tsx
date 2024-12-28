@@ -15,7 +15,7 @@ const BillingPage = async (props: Props) => {
             </div>
             <div>
                 <h2 className="text-2xl">
-                    ${payment?.data?.subscription?.plan === 'PRO' ? '99' : '0'}/Month
+                    ${payment?.data?.subscription?.plan === 'PRO' ? '15' : '0'}/Month
                 </h2>
                 <p className="text-[#9D9D9D]">{payment?.data?.subscription?.plan}</p>
             </div>
