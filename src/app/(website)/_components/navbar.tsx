@@ -18,7 +18,7 @@ const LandingPageNavBar = (props: Props) => {
   console.log(path)
 
   return (
-    <div className="flex w-full justify-between items-center">
+    <div className="flex w-full justify-between items-center bg-color2 p-3 rounded-sm">
       <div className="text-3xl font-semibold flex items-center gap-x-3">
         <div className='lg:hidden'>
           <DropdownPaluMenu />
