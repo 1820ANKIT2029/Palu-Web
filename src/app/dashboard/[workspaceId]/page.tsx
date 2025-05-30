@@ -9,9 +9,9 @@ type Props = {
 }
 
 const Page = async ({ params }: Props) => {
-  const {workspaceId} = await params;
+  const { workspaceId } = await params;
 
-  return (
+  return (  
     <div>
       <Tabs defaultValue='videos' className='mt-6'>
         <div className='flex w-full justify-between items-center'>
@@ -36,6 +36,11 @@ const Page = async ({ params }: Props) => {
         <section className='py-9'>
           <TabsContent value='videos'>
             <Folders workspaceId={workspaceId} />
+          </TabsContent>
+
+          <TabsContent value='archive'>
+            This is Archive Folders 
+            <p>Need Implementation</p>
           </TabsContent>
         </section>
 

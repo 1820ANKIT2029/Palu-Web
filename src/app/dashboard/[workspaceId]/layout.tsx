@@ -31,14 +31,14 @@ const Layout = async ({ params , children } : Props) => {
     if(!hasAccess.data?.workspace) return <div>null</div>;
 
     const query = new QueryClient();
-    // await query.prefetchQuery({
-    //     queryKey: ['workspace-folders'],
-    //     queryFn: () => getWorkspaceFolders(workspaceId),
-    // })
-    // await query.prefetchQuery({
-    //     queryKey: ['user-videos'],
-    //     queryFn: () => getAllUserVideos(workspaceId),
-    // })
+    await query.prefetchQuery({
+        queryKey: ['workspace-folders'],
+        queryFn: () => getWorkspaceFolders(workspaceId),
+    })
+    await query.prefetchQuery({
+        queryKey: ['user-videos'],
+        queryFn: () => getAllUserVideos(workspaceId),
+    })
     await query.prefetchQuery({
         queryKey: ['user-workspaces'],
         queryFn: () => getWorkSpaces(),

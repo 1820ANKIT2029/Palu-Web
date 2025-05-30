@@ -15,7 +15,7 @@ type Props = {}
 const LandingPageNavBar = (props: Props) => {
   const path = usePathname()
 
-  console.log(path)
+  // console.log(path)
 
   return (
     <div className="flex w-full justify-between items-center bg-color2 p-3 rounded-sm">
@@ -29,7 +29,9 @@ const LandingPageNavBar = (props: Props) => {
           width={40}
           height={40}
         />
-        Palu
+        <span className='hidden lg:flex'>
+          Palu
+        </span>
       </div>
       <div className="hidden gap-x-10 items-center lg:flex">
         <Link

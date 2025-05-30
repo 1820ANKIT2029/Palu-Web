@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
 import React, { useEffect } from 'react'
 import Folder from './folder'
+import { FoldersProps } from '@/types/index.type'
 import { useQueryData } from '@/hooks/useQueryData'
 import { getWorkspaceFolders } from '@/actions/workspace'
 import { useMutationDataState } from '@/hooks/useMutationData'
@@ -13,20 +14,6 @@ import { FOLDERS } from '@/redux/slices/folders'
 
 type Props = {
     workspaceId: string
-}
-
-export type FoldersProps = {
-    status: number
-    data: ({
-        _count: {
-            videos: number
-        }
-    } & {
-        id: string
-        name: string
-        createdAt: Date
-        workSpaceId: string | null
-    })[]
 }
 
 const Folders = ({workspaceId}: Props) => {

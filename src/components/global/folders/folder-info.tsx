@@ -3,7 +3,7 @@
 import { getFolderInfo } from '@/actions/workspace'
 import { useQueryData } from '@/hooks/useQueryData'
 import React from 'react'
-import { FoldersProps } from '.'
+import { FoldersProps } from '@/types/index.type'
 import { FolderProps } from '@/types/index.type'
 
 type Props = {
