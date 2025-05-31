@@ -1,6 +1,6 @@
 'use client'
 
-import { getAllUserVideos } from '@/actions/workspace'
+import { getAllUserVideosNotInAnyFolders } from '@/actions/workspace'
 import VideoRecorderDuotone from '@/components/icons/video-recorder-duotone'
 import { useQueryData } from '@/hooks/useQueryData'
 import { cn } from '@/lib/utils'
@@ -9,15 +9,14 @@ import React from 'react'
 import VideoCard from './video-card'
 
 type Props = {
-  folderId: string
   videosKey: string
   workspaceId: string
 }
 
-const Videos = ({ folderId, videosKey, workspaceId }: Props) => {
+const VideosNotInFolder = ({ videosKey, workspaceId }: Props) => {
   
-  const { data: videoData, isFetching } = useQueryData([videosKey, folderId], () =>
-    getAllUserVideos(folderId)
+  const { data: videoData , isFetching} = useQueryData([videosKey, workspaceId], () =>
+    getAllUserVideosNotInAnyFolders(workspaceId)
   )
 
   if(isFetching && !videoData){
@@ -57,4 +56,4 @@ const Videos = ({ folderId, videosKey, workspaceId }: Props) => {
   )
 }
 
-export default Videos
+export default VideosNotInFolder

@@ -14,9 +14,13 @@ type Props = {
 }
 
 const Activities = ({ author, videoId }: Props) => {
-    const { data } = useQueryData(['video-comments'], () =>
+    const { data, isFetching } = useQueryData(['video-comments', videoId], () =>
         getVideoComments(videoId)
     )
+
+    if(isFetching){
+        return null;
+    }
 
     const { data: comments } = data as VideoCommentProps || []
 

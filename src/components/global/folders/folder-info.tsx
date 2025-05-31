@@ -11,7 +11,11 @@ type Props = {
 }
 
 function FolderInfo({folderId}: Props) {
-    const { data } = useQueryData(['folder-info'], () => getFolderInfo(folderId));
+    const { data, isFetching } = useQueryData(['folder-info', folderId], () => getFolderInfo(folderId));
+
+    if(isFetching){
+        return null;
+    }
 
     const { data : folder } = data as FolderProps;
 

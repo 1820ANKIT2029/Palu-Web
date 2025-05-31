@@ -18,7 +18,10 @@ type Props = {
 
 const Folders = ({workspaceId}: Props) => {
     const dispatch = useDispatch();
-    const { data , isFetched} = useQueryData(['workspace-folders'], ()=> getWorkspaceFolders(workspaceId));
+    const { data , isFetched} = useQueryData(
+        ['workspace-folders', workspaceId], 
+        ()=> getWorkspaceFolders(workspaceId)
+    );
 
     const { latestVariables } = useMutationDataState(['create-folder']); 
 

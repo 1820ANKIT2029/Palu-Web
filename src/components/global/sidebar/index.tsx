@@ -26,19 +26,32 @@ import PaymentButton from '../payment-button'
 
 type Props = {
     activeWorkspaceId: string
+    userId: string
 }
 
-const Sidebar = ({ activeWorkspaceId }: Props) => {
+const Sidebar = ({ activeWorkspaceId, userId }: Props) => {
     const router = useRouter();
     const pathname = usePathname();
     const dispatch = useDispatch();
 
-    const { data, isFetched } = useQueryData(["user-workspaces"], getWorkSpaces);
+    const { data: workspaces, isFetched, isFetching: isFetchingWorkspaces } = useQueryData(["user-workspaces", userId], getWorkSpaces);
     const menuItems = MENU_ITEMS(activeWorkspaceId);
 
-    const { data: notifications } = useQueryData(["user-notifications"], getNotifications);
+    const { data: notifications, isFetching: isFetchingNotification } = useQueryData(["user-notifications", userId], getNotifications);
 
-    const { data: workspace } = data as WorkspaceProps;
+    if(isFetchingNotification && isFetchingWorkspaces) {
+        // todo: replace with sidebar skelaton
+        return (
+            <Loader
+                state={isFetchingNotification}
+                color="#000"
+            >
+                Loading
+            </Loader>
+        );
+    }
+
+    const { data: workspace } = workspaces as WorkspaceProps;
     const { data: count } = notifications as NotificationProps;
 
     const onChangeActiveWorkspace = (value: string) => {

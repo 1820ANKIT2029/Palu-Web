@@ -1,5 +1,5 @@
 import { getNotifications, onAuthenticateUser } from '@/actions/user';
-import { getAllUserVideos, getWorkspaceFolders, getWorkSpaces, verifyAccessToWebspace } from '@/actions/workspace';
+import { getAllUserVideosNotInAnyFolders, getWorkspaceFolders, getWorkSpaces, verifyAccessToWebspace } from '@/actions/workspace';
 import { redirect } from 'next/navigation';
 import React from 'react';
 import {
@@ -32,26 +32,26 @@ const Layout = async ({ params , children } : Props) => {
 
     const query = new QueryClient();
     await query.prefetchQuery({
-        queryKey: ['workspace-folders'],
+        queryKey: ['workspace-folders', workspaceId],
         queryFn: () => getWorkspaceFolders(workspaceId),
     })
     await query.prefetchQuery({
-        queryKey: ['user-videos'],
-        queryFn: () => getAllUserVideos(workspaceId),
+        queryKey: ['user-videos', workspaceId],
+        queryFn: () => getAllUserVideosNotInAnyFolders(workspaceId),
     })
     await query.prefetchQuery({
-        queryKey: ['user-workspaces'],
+        queryKey: ['user-workspaces', auth.user.id],
         queryFn: () => getWorkSpaces(),
     });
     await query.prefetchQuery({
-        queryKey: ['user-notifications'],
+        queryKey: ['user-notifications', auth.user.id],
         queryFn: () => getNotifications(),
     });
 
     return (
         <HydrationBoundary state={dehydrate(query)}>
             <div className='flex h-screen w-screen'>
-                <Sidebar activeWorkspaceId={workspaceId} />
+                <Sidebar activeWorkspaceId={workspaceId} userId={auth.user.id} />
                 <div className='w-full pt-28 p-6 overflow-y-scroll overflow-x-hidden'>
                     <GlobalHeader workspace={hasAccess.data.workspace} />
                     <div className='mt-4'>{children}</div>
