@@ -10,21 +10,20 @@ type Props = {
     currentFolderName?: string
 }
 
-const CardMenu = ({videoId, currentFolder, currentFolderName, currentWorkspace}: Props) => {
+const CardMenu = ({videoId, currentFolder, currentWorkspace}: Props) => {
   return (
     <Modal
         className='flex items-center cursor-pointer gap-x-2'
         title='Move to new Workspace/Folder'
-        description='This action cannot be undone. This will permanently delete your account and remove your data from our servers.'
+        description='Choose Workspace and Folder to transfer to your desire location.'
         trigger={
             <Move size={20} fill='#A4A4A4' className='text-[#A4A4A4]' />
         }
     >
         <ChangeVideoLocation
             currentFolder={currentFolder}
-            currentWorkspace={currentWorkspace}
+            currentWorkSpace={currentWorkspace}
             videoId={videoId}
-            currentFolderName={currentFolderName}
         />
     </Modal>
   )

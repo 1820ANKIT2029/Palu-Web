@@ -10,13 +10,11 @@ type Props = {
     videoId: string
     currentFolder?: string
     currentWorkSpace?: string
-    currentFolderName?: string
 }
 
 const ChangeVideoLocation = ({
     videoId,
     currentFolder,
-    currentFolderName,
     currentWorkSpace,
 }: Props) => {
     const {
@@ -55,7 +53,7 @@ const ChangeVideoLocation = ({
                         {workspaces.map((space) => (
                             <option
                                 key={space.id}
-                                className="text-[#a4a4a4]"
+                                className="text-[#a4a4a4] bg-black"
                                 value={space.id}
                             >
                                 {space.name}
@@ -76,7 +74,7 @@ const ChangeVideoLocation = ({
                                 {isFolders.map((folder, key) =>
                                     key === 0 ? (
                                         <option
-                                            className="text-[#a4a4a4]"
+                                            className="text-[#a4a4a4] bg-black"
                                             key={folder.id}
                                             value={folder.id}
                                         >
@@ -84,7 +82,7 @@ const ChangeVideoLocation = ({
                                         </option>
                                     ) : (
                                         <option
-                                            className="text-[#a4a4a4]"
+                                            className="text-[#a4a4a4] bg-black"
                                             key={folder.id}
                                             value={folder.id}
                                         >

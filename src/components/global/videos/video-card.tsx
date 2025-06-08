@@ -37,7 +37,6 @@ const VideoCard = (props: Props) => {
         <div className="group overflow-hidden cursor-pointer bg-[#171717] relative border-[1px] border-[#252525] flex flex-col rounded-xl">
             <div className="absolute top-3 right-3 z-50 gap-x-3 hidden group-hover:flex">
                 <CardMenu
-                    currentFolderName={props.Folder?.name}
                     videoId={props.id}
                     currentWorkspace={props.workspaceId}
                     currentFolder={props.Folder?.id}

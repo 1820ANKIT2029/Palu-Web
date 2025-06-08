@@ -28,6 +28,8 @@ const AiTools = ({ plan, trial, videoId }: Props) => {
     //serveraction titles and description
 
     //WIP: setup the ai hook
+
+
     return (
         <TabsContent value="Ai tools">
             <div className="p-5 bg-[#1D1D1D]  rounded-xl flex flex-col gap-y-6 ">
@@ -60,14 +62,14 @@ const AiTools = ({ plan, trial, videoId }: Props) => {
                                 Pay Now
                             </Loader>
                         </Button>
-                        {/* <Button className=" mt-2 text-sm">
-            <Loader
-              state={false}
-              color="#000"
-            >
-              Generate Now
-            </Loader>
-          </Button> */}
+                        <Button className=" mt-2 text-sm">
+                            <Loader
+                                state={false}
+                                color="#000"
+                            >
+                                Generate Now
+                            </Loader>
+                        </Button>
                     </div>
                 </div>
                 <div className=" border-[1px] rounded-xl p-4 gap-4 flex flex-col bg-[#1b0f1b7f] ">

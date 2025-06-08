@@ -29,28 +29,28 @@ export const useMoveVideos = (videoId: string, currentWorkspace: string) => {
 
     const { mutate, isPending } = useMutationData(
         ['change-video-location'],
-        (data: { folder_id: string; workspaceId: string }) => 
-            moveVideoLocation(videoId, data.folder_id, data.workspaceId),
+        (data: { folder_id: string; workspace_id: string }) =>
+            moveVideoLocation(videoId, data.workspace_id,  data.folder_id),
     );
 
-    const { errors, OnFormSubmit, register, watch} = useZodForm(
+    const { errors, OnFormSubmit, register, watch } = useZodForm(
         movevideoSchema,
         mutate,
         { folder_id: null, workspace_id: currentWorkspace }
     )
 
-    const fetchFolders = async (workspace:string) => {
+    const fetchFolders = async (workspace: string) => {
         setIsFetching(true);
         const folders = await getWorkspaceFolders(workspace);
         setIsFetching(false);
         setIsFolders(folders.data);
     }
 
-    useEffect(()=> {
+    useEffect(() => {
         fetchFolders(currentWorkspace)
     }, [])
 
-    useEffect(()=> {
+    useEffect(() => {
         const workspace = watch(async (value) => {
             if (value.workspace_id) fetchFolders(value.workspace_id)
         })

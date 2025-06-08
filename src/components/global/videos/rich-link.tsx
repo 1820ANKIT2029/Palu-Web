@@ -11,22 +11,45 @@ type Props = {
 
 const RichLink = ({ title, id, source, description }: Props) => {
     const copyRichText = () => {
-        const orignalTitle = title;
-        const thumbnail = `<a style="display: flex; flex-direction: column; gap: 10px" href="${process.env.NEXT_PUBLIC_HOST_URL}/preview/${id}">
-        <h3 style="text-decoration: none; color: black; margin: 0;">${orignalTitle}</h3>
-        <p style="text-decoration: none; color: black; margin: 0;">${description}</p>
-        <video
-            width="320"
-            style="display: block"
-            >
-                <source
-                    type="video/webm"
-                    src="${process.env.NEXT_PUBLIC_CLOUD_FRONT_STREAM_URL}/${source}"
-                />
-            </video>
-        </a>`
+        const originalTitle = title;
+
+        const thumbnail = `
+      <a href="${process.env.NEXT_PUBLIC_HOST_URL}/preview/${id}" 
+         style="
+           display: block; 
+           padding: 16px; 
+           text-decoration: none; 
+           background: #fff; 
+           border-radius: 12px; 
+           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+           transition: transform 0.2s ease;
+         "
+         onmouseover="this.style.transform='scale(1.02)'"
+         onmouseout="this.style.transform='scale(1)'"
+      >
+        <h3 style="
+              margin: 0 0 8px 0; 
+              font-size: 18px; 
+              color: #111;"
+        >
+          ${originalTitle}
+        </h3>
+        <p style="
+              margin: 0 0 12px 0; 
+              font-size: 14px; 
+              color: #555;"
+        >
+          ${description}
+        </p>
+        <video width="100%" style="border-radius: 8px;" controls>
+          <source 
+            type="video/webm" 
+            src="${process.env.NEXT_PUBLIC_CLOUD_FRONT_STREAM_URL}/${source}" 
+          />
+        </video>
+      </a>`
         const thumbnailBlob = new Blob([thumbnail], { type: 'text/html'});
-        const blobTitle = new Blob([orignalTitle], { type: 'text/plain'});
+        const blobTitle = new Blob([originalTitle, description, `${process.env.NEXT_PUBLIC_CLOUD_FRONT_STREAM_URL}/${source}`], { type: 'text/plain'});
         const data = [
             new ClipboardItem({
                 ['text/plain']: blobTitle,
@@ -49,4 +72,4 @@ const RichLink = ({ title, id, source, description }: Props) => {
     )
 }
 
-export default RichLink
+export default RichLink;

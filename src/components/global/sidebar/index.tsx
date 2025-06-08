@@ -17,7 +17,7 @@ import { getNotifications } from '@/actions/user'
 import WorkspacePlaceholder from './workspace-placeholder'
 import GlobalCard from '../global-card'
 import { Button } from '@/components/ui/button'
-import Loader from '../loader'
+import SidebarSkeleton from './sidebar-skeleton'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import InfoBar from '../info-bar'
 import { useDispatch } from 'react-redux'
@@ -39,16 +39,29 @@ const Sidebar = ({ activeWorkspaceId, userId }: Props) => {
 
     const { data: notifications, isFetching: isFetchingNotification } = useQueryData(["user-notifications", userId], getNotifications);
 
-    if(isFetchingNotification && isFetchingWorkspaces) {
-        // todo: replace with sidebar skelaton
+    if (isFetchingNotification && isFetchingWorkspaces) {
         return (
-            <Loader
-                state={isFetchingNotification}
-                color="#000"
-            >
-                Loading
-            </Loader>
-        );
+        <div className='full'>
+            <InfoBar />
+            <div className='md:hidden fixed my-4'>
+                <Sheet>
+                    <SheetTrigger asChild className='ml-2'>
+                        <Button variant='ghost' className='mt-[2px]'>
+                            <Menu />
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side={'left'} className='p-0 w-fit h-full'>
+                        <SidebarSkeleton />
+                    </SheetContent>
+                </Sheet>
+            </div>
+
+            <div className='md:block hidden h-full'>
+                <SidebarSkeleton />
+            </div>
+        </div>
+    )
+        return <SidebarSkeleton />
     }
 
     const { data: workspace } = workspaces as WorkspaceProps;
