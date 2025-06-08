@@ -5,7 +5,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { sendEmail } from "./user";
 // import { createClient, OAuthStrategy } from '@wix/sdk';
 // import { items } from '@wix/data';
-import axios from "axios";
+// import axios from "axios";
 
 export const verifyAccessToWebspace = async (workspaceId: string) => {
     try {

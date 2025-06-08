@@ -4,7 +4,7 @@ import { client } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import getInviteEmailOptions from "@/components/global/invite-template";
 import nodemailer from 'nodemailer';
-import Stripe from "stripe";
+// import Stripe from "stripe";
 
 // need to implement
 // const stripe = new Stripe(process.env.STRIPE_CLIENT_SECRET as string)
@@ -414,7 +414,7 @@ export const inviteMembers = async (
                         html
                     )
         
-                    transporter.sendMail(mailOptions, (error, info) => {
+                    transporter.sendMail(mailOptions, (error, _) => {
                         if (error) {
                             console.log('🔴', error.message)
                         } else {
@@ -428,7 +428,7 @@ export const inviteMembers = async (
             return { status: 404, data: 'workspace not found' }
         }
         return { status: 404, data: 'recipient not found' }
-    } catch (error: any) {
+    } catch (error) {
         console.log('Error caught:', typeof error === 'object' ? JSON.stringify(error, null, 2) : error);
         return { status: 400, data: 'Internal server error' }
     }
