@@ -54,6 +54,17 @@ This Palu has three components:
    npm run dev
    ```
 
+Docker 
+   ```bash
+   docker build --target development -t palu-web .
+   docker run -v ./:/usr/src/app -p 3000:3000 palu-web
+   ```
+
+   ```bash
+   docker build --target production -t palu-web-pro .
+   docker run -v -p 3000:3000 palu-web-pro
+   ```
+
 ## Usage
 
 1. Open the application in your browser at `http://localhost:3000`.
