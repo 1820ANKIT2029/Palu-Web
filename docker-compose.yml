@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Development Service
+  palu-web-dev:
+    container_name: palu-web-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - .:/app
+      # Do not mount over the container's node_modules folder
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  # Production Service
+  palu-web-prod:
+    container_name: palu-web-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "3000:3000" 
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    restart: unless-stopped

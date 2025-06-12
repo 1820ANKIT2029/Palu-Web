@@ -1,40 +1,50 @@
-# stage 1
-
+# Stage 1: Base image with essential tools
 FROM node:22-alpine AS base
+WORKDIR /app
 
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
-WORKDIR /usr/src/app
+# Stage 2: Install dependencies
+# This stage is used as a cache for both dev and prod
+FROM base AS deps
+COPY package.json package-lock.json ./
+RUN npm install
 
-COPY package.json package-lock.json* ./
-RUN npm ci
-
-# stage 2
-
-FROM base AS development
-
-ENV NODE_ENV=development
-COPY . . 
-RUN npx prisma generate
-CMD ["npm", "run", "dev"]
-
-
-# stage 3
-
+# Stage 3: Builder for production
+# This stage builds the application for production
 FROM base AS builder
-
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate
+# Omitting dev dependencies in the build step is good practice
 RUN npm run build
-RUN npm prune --omit=dev && npm cache clean --force
 
-# stage 4
+# Stage 4: Development environment
+# This stage is for running the app in development mode
+FROM base AS development
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npx prisma generate
+# Expose the port Next.js runs on
+EXPOSE 3000
+# Start the development server with hot-reloading
+CMD ["npm", "run", "dev"]
 
-FROM builder AS production
-
+# Stage 5: Production environment
+# This is the final, lean production image
+FROM base AS production
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+
+# Create a non-root user for security
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy only necessary files from the builder stage
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+# Start the optimized Next.js server
+CMD ["node", "server.js"]
