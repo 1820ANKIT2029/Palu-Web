@@ -56,13 +56,11 @@ This Palu has three components:
 
 Docker 
    ```bash
-   docker build --target development -t palu-web .
-   docker run -v ./:/usr/src/app -p 3000:3000 palu-web
+   docker-compose up --build palu-web-dev
    ```
 
    ```bash
-   docker build --target production -t palu-web-pro .
-   docker run -v -p 3000:3000 palu-web-pro
+   docker-compose up --build palu-web-prod
    ```
 
 ## Usage
